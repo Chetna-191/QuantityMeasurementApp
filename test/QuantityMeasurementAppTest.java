@@ -4,58 +4,58 @@ import static org.junit.jupiter.api.Assertions.*;
 class QuantityMeasurementAppTest {
 
     @Test
-    void testYardToFeet() {
-        QuantityMeasurementApp.Quantity q1 =
-                new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.LengthUnit.YARD);
-        QuantityMeasurementApp.Quantity q2 =
-                new QuantityMeasurementApp.Quantity(3.0, QuantityMeasurementApp.LengthUnit.FEET);
-
-        assertTrue(q1.equals(q2));
+    void testFeetToInch() {
+        assertEquals(12.0,
+                QuantityMeasurementApp.convert(1.0,
+                        QuantityMeasurementApp.LengthUnit.FEET,
+                        QuantityMeasurementApp.LengthUnit.INCH));
     }
 
     @Test
-    void testYardToInch() {
-        QuantityMeasurementApp.Quantity q1 =
-                new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.LengthUnit.YARD);
-        QuantityMeasurementApp.Quantity q2 =
-                new QuantityMeasurementApp.Quantity(36.0, QuantityMeasurementApp.LengthUnit.INCH);
+    void testYardToFeet() {
+        assertEquals(9.0,
+                QuantityMeasurementApp.convert(3.0,
+                        QuantityMeasurementApp.LengthUnit.YARD,
+                        QuantityMeasurementApp.LengthUnit.FEET));
+    }
 
-        assertTrue(q1.equals(q2));
+    @Test
+    void testInchToYard() {
+        assertEquals(1.0,
+                QuantityMeasurementApp.convert(36.0,
+                        QuantityMeasurementApp.LengthUnit.INCH,
+                        QuantityMeasurementApp.LengthUnit.YARD));
     }
 
     @Test
     void testCmToInch() {
-        QuantityMeasurementApp.Quantity q1 =
-                new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.LengthUnit.CM);
-        QuantityMeasurementApp.Quantity q2 =
-                new QuantityMeasurementApp.Quantity(0.393701, QuantityMeasurementApp.LengthUnit.INCH);
+        double result = QuantityMeasurementApp.convert(2.54,
+                QuantityMeasurementApp.LengthUnit.CM,
+                QuantityMeasurementApp.LengthUnit.INCH);
 
-        assertTrue(q1.equals(q2));
+        assertTrue(Math.abs(result - 1.0) < 0.0001);
     }
 
     @Test
-    void testDifferentValues() {
-        QuantityMeasurementApp.Quantity q1 =
-                new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.LengthUnit.CM);
-        QuantityMeasurementApp.Quantity q2 =
-                new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.LengthUnit.FEET);
-
-        assertFalse(q1.equals(q2));
+    void testZero() {
+        assertEquals(0.0,
+                QuantityMeasurementApp.convert(0.0,
+                        QuantityMeasurementApp.LengthUnit.FEET,
+                        QuantityMeasurementApp.LengthUnit.INCH));
     }
 
     @Test
-    void testNullComparison() {
-        QuantityMeasurementApp.Quantity q1 =
-                new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.LengthUnit.FEET);
-
-        assertFalse(q1.equals(null));
+    void testNegative() {
+        assertEquals(-12.0,
+                QuantityMeasurementApp.convert(-1.0,
+                        QuantityMeasurementApp.LengthUnit.FEET,
+                        QuantityMeasurementApp.LengthUnit.INCH));
     }
 
     @Test
-    void testSameReference() {
-        QuantityMeasurementApp.Quantity q1 =
-                new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.LengthUnit.FEET);
-
-        assertTrue(q1.equals(q1));
+    void testInvalidUnit() {
+        assertThrows(IllegalArgumentException.class, () ->
+                QuantityMeasurementApp.convert(1.0, null,
+                        QuantityMeasurementApp.LengthUnit.FEET));
     }
 }
