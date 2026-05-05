@@ -1,29 +1,7 @@
 class QuantityMeasurementApp {
 
-    // ENUM
-    enum LengthUnit {
-        FEET(1.0),
-        INCH(1.0 / 12.0),
-        YARD(3.0),
-        CM(0.393701 / 12.0);
-
-        private final double toFeetFactor;
-
-        LengthUnit(double toFeetFactor) {
-            this.toFeetFactor = toFeetFactor;
-        }
-
-        public double toFeet(double value) {
-            return value * toFeetFactor;
-        }
-
-        public double fromFeet(double feetValue) {
-            return feetValue / toFeetFactor;
-        }
-    }
-
-    // Quantity Class
     static class Quantity {
+
         private final double value;
         private final LengthUnit unit;
 
@@ -38,35 +16,29 @@ class QuantityMeasurementApp {
             this.unit = unit;
         }
 
-        // UC5: convert
-        public Quantity convertTo(LengthUnit target) {
-            double feetValue = unit.toFeet(value);
-            double converted = target.fromFeet(feetValue);
-            return new Quantity(converted, target);
+        // Convert
+        public Quantity convertTo(LengthUnit targetUnit) {
+            double base = unit.convertToBaseUnit(value);
+            double converted = targetUnit.convertFromBaseUnit(base);
+            return new Quantity(converted, targetUnit);
         }
 
-        // UC6: add (default → first unit)
+        // Add (default → first unit)
         public Quantity add(Quantity other) {
-            if (other == null)
-                throw new IllegalArgumentException("Other cannot be null");
-
-            double sumFeet = this.unit.toFeet(this.value)
-                    + other.unit.toFeet(other.value);
-
-            double result = this.unit.fromFeet(sumFeet);
-            return new Quantity(result, this.unit);
+            return add(other, this.unit);
         }
 
-        // 🚀 UC7: add with TARGET UNIT (MAIN FEATURE)
+        // UC7 + UC8 add
         public Quantity add(Quantity other, LengthUnit targetUnit) {
 
             if (other == null || targetUnit == null)
                 throw new IllegalArgumentException("Invalid input");
 
-            double sumFeet = this.unit.toFeet(this.value)
-                    + other.unit.toFeet(other.value);
+            double sumBase =
+                    this.unit.convertToBaseUnit(this.value) +
+                            other.unit.convertToBaseUnit(other.value);
 
-            double result = targetUnit.fromFeet(sumFeet);
+            double result = targetUnit.convertFromBaseUnit(sumBase);
 
             return new Quantity(result, targetUnit);
         }
@@ -79,8 +51,8 @@ class QuantityMeasurementApp {
             Quantity other = (Quantity) obj;
 
             return Double.compare(
-                    this.unit.toFeet(this.value),
-                    other.unit.toFeet(other.value)
+                    this.unit.convertToBaseUnit(this.value),
+                    other.unit.convertToBaseUnit(other.value)
             ) == 0;
         }
 
@@ -90,24 +62,18 @@ class QuantityMeasurementApp {
         }
     }
 
-    // MAIN METHOD
     public static void main(String[] args) {
 
         Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
         Quantity q2 = new Quantity(12.0, LengthUnit.INCH);
 
+        System.out.println(q1.convertTo(LengthUnit.INCH)); // 12
         System.out.println(q1.add(q2, LengthUnit.FEET));   // 2 FEET
-        System.out.println(q1.add(q2, LengthUnit.INCH));   // 24 INCH
-        System.out.println(q1.add(q2, LengthUnit.YARD));   // ~0.667 YARD
+        System.out.println(q1.add(q2, LengthUnit.YARD));   // 0.667
 
-        Quantity q3 = new Quantity(1.0, LengthUnit.YARD);
-        Quantity q4 = new Quantity(3.0, LengthUnit.FEET);
+        Quantity q3 = new Quantity(36.0, LengthUnit.INCH);
+        Quantity q4 = new Quantity(1.0, LengthUnit.YARD);
 
-        System.out.println(q3.add(q4, LengthUnit.FEET));   // 6 FEET
-
-        Quantity q5 = new Quantity(2.54, LengthUnit.CM);
-        Quantity q6 = new Quantity(1.0, LengthUnit.INCH);
-
-        System.out.println(q5.add(q6, LengthUnit.CM));     // ~5.08 CM
+        System.out.println(q3.equals(q4)); // true
     }
 }
