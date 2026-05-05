@@ -1,13 +1,12 @@
-public enum LengthUnit implements IMeasurable {
+public enum VolumeUnit implements IMeasurable {
 
-    FOOT(1.0),
-    INCH(1.0 / 12.0),
-    YARD(3.0),
-    CENTIMETER(1.0 / 30.48);
+    LITRE(1.0),
+    MILLILITRE(0.001),
+    GALLON(3.78541);
 
     private final double factor;
 
-    LengthUnit(double factor) {
+    VolumeUnit(double factor) {
         this.factor = factor;
     }
 
