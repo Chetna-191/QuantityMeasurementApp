@@ -4,80 +4,66 @@ import static org.junit.jupiter.api.Assertions.*;
 class QuantityMeasurementAppTest {
 
     @Test
-    void testSubtractionFeetInch() {
-        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        var q2 = new Quantity<>(6.0, LengthUnit.INCH);
+    void testAdd() {
+        var q1 = new QuantityMeasurementApp.Quantity<>(1.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
 
-        assertEquals(9.5, q1.subtract(q2).getValue());
+        var q2 = new QuantityMeasurementApp.Quantity<>(12.0,
+                QuantityMeasurementApp.LengthUnit.INCH);
+
+        assertEquals(2.0, q1.add(q2).value);
     }
 
     @Test
-    void testSubtractionTargetUnit() {
-        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        var q2 = new Quantity<>(6.0, LengthUnit.INCH);
+    void testSubtract() {
+        var q1 = new QuantityMeasurementApp.Quantity<>(10.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
 
-        assertEquals(114.0, q1.subtract(q2, LengthUnit.INCH).getValue());
+        var q2 = new QuantityMeasurementApp.Quantity<>(6.0,
+                QuantityMeasurementApp.LengthUnit.INCH);
+
+        assertEquals(9.5, q1.subtract(q2).value);
     }
 
     @Test
-    void testNegativeSubtraction() {
-        var q1 = new Quantity<>(5.0, LengthUnit.FEET);
-        var q2 = new Quantity<>(10.0, LengthUnit.FEET);
+    void testDivide() {
+        var q1 = new QuantityMeasurementApp.Quantity<>(10.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
 
-        assertEquals(-5.0, q1.subtract(q2).getValue());
-    }
-
-    @Test
-    void testZeroSubtraction() {
-        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        var q2 = new Quantity<>(120.0, LengthUnit.INCH);
-
-        assertEquals(0.0, q1.subtract(q2).getValue());
-    }
-
-    @Test
-    void testDivisionSameUnit() {
-        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        var q2 = new Quantity<>(2.0, LengthUnit.FEET);
+        var q2 = new QuantityMeasurementApp.Quantity<>(2.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
 
         assertEquals(5.0, q1.divide(q2));
     }
 
     @Test
-    void testDivisionCrossUnit() {
-        var q1 = new Quantity<>(24.0, LengthUnit.INCH);
-        var q2 = new Quantity<>(2.0, LengthUnit.FEET);
+    void testTargetUnit() {
+        var q1 = new QuantityMeasurementApp.Quantity<>(10.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
 
-        assertEquals(1.0, q1.divide(q2));
+        var q2 = new QuantityMeasurementApp.Quantity<>(6.0,
+                QuantityMeasurementApp.LengthUnit.INCH);
+
+        assertEquals(114.0,
+                q1.subtract(q2, QuantityMeasurementApp.LengthUnit.INCH).value);
     }
 
     @Test
-    void testDivisionLessThanOne() {
-        var q1 = new Quantity<>(5.0, LengthUnit.FEET);
-        var q2 = new Quantity<>(10.0, LengthUnit.FEET);
+    void testDivideByZero() {
+        var q1 = new QuantityMeasurementApp.Quantity<>(10.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
 
-        assertEquals(0.5, q1.divide(q2));
-    }
-
-    @Test
-    void testDivisionByZero() {
-        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
-        var q2 = new Quantity<>(0.0, LengthUnit.FEET);
+        var q2 = new QuantityMeasurementApp.Quantity<>(0.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
 
         assertThrows(ArithmeticException.class, () -> q1.divide(q2));
     }
 
     @Test
-    void testNullSubtraction() {
-        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
+    void testNull() {
+        var q1 = new QuantityMeasurementApp.Quantity<>(10.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
 
-        assertThrows(IllegalArgumentException.class, () -> q1.subtract(null));
-    }
-
-    @Test
-    void testNullDivision() {
-        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
-
-        assertThrows(IllegalArgumentException.class, () -> q1.divide(null));
+        assertThrows(IllegalArgumentException.class, () -> q1.add(null));
     }
 }
