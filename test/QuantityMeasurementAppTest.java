@@ -3,40 +3,43 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class QuantityMeasurementAppTest {
 
+    // FEET TESTS
     @Test
-    void testEquality_SameValue() {
-        QuantityMeasurementApp.Feet f1 = new QuantityMeasurementApp.Feet(1.0);
-        QuantityMeasurementApp.Feet f2 = new QuantityMeasurementApp.Feet(1.0);
-
-        assertTrue(f1.equals(f2));
+    void testFeet_SameValue() {
+        assertTrue(QuantityMeasurementApp.checkFeetEquality(1.0, 1.0));
     }
 
     @Test
-    void testEquality_DifferentValue() {
-        QuantityMeasurementApp.Feet f1 = new QuantityMeasurementApp.Feet(1.0);
-        QuantityMeasurementApp.Feet f2 = new QuantityMeasurementApp.Feet(2.0);
+    void testFeet_DifferentValue() {
+        assertFalse(QuantityMeasurementApp.checkFeetEquality(1.0, 2.0));
+    }
 
-        assertFalse(f1.equals(f2));
+    // INCH TESTS
+    @Test
+    void testInch_SameValue() {
+        assertTrue(QuantityMeasurementApp.checkInchEquality(1.0, 1.0));
     }
 
     @Test
-    void testEquality_Null() {
-        QuantityMeasurementApp.Feet f1 = new QuantityMeasurementApp.Feet(1.0);
-
-        assertFalse(f1.equals(null));
+    void testInch_DifferentValue() {
+        assertFalse(QuantityMeasurementApp.checkInchEquality(1.0, 2.0));
     }
 
     @Test
-    void testEquality_SameReference() {
-        QuantityMeasurementApp.Feet f1 = new QuantityMeasurementApp.Feet(1.0);
-
-        assertTrue(f1.equals(f1));
+    void testInch_NullComparison() {
+        QuantityMeasurementApp.Inches i = new QuantityMeasurementApp.Inches(1.0);
+        assertFalse(i.equals(null));
     }
 
     @Test
-    void testEquality_NonNumeric() {
-        QuantityMeasurementApp.Feet f1 = new QuantityMeasurementApp.Feet(1.0);
+    void testInch_SameReference() {
+        QuantityMeasurementApp.Inches i = new QuantityMeasurementApp.Inches(1.0);
+        assertTrue(i.equals(i));
+    }
 
-        assertFalse(f1.equals("test"));
+    @Test
+    void testInch_NonNumeric() {
+        QuantityMeasurementApp.Inches i = new QuantityMeasurementApp.Inches(1.0);
+        assertFalse(i.equals("test"));
     }
 }
