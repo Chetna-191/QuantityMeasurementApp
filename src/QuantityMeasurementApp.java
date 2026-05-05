@@ -2,23 +2,18 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        // LENGTH
-        Quantity<LengthUnit> l1 = new Quantity<>(1.0, LengthUnit.FEET);
-        Quantity<LengthUnit> l2 = new Quantity<>(12.0, LengthUnit.INCH);
-
-        System.out.println(l1.equals(l2)); // true
-        System.out.println(l1.convertTo(LengthUnit.INCH));
-        System.out.println(l1.add(l2, LengthUnit.FEET));
-
-        // WEIGHT
-        Quantity<WeightUnit> w1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
-        Quantity<WeightUnit> w2 = new Quantity<>(1000.0, WeightUnit.GRAM);
+        // 🔍 Equality
+        QuantityWeight w1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        QuantityWeight w2 = new QuantityWeight(1000.0, WeightUnit.GRAM);
 
         System.out.println(w1.equals(w2)); // true
-        System.out.println(w1.convertTo(WeightUnit.GRAM));
-        System.out.println(w1.add(w2, WeightUnit.KILOGRAM));
 
-        // ❌ CROSS CATEGORY (SAFE)
-        System.out.println(l1.equals(w1)); // false
+        // 🔁 Conversion
+        System.out.println(w1.convertTo(WeightUnit.GRAM)); // 1000
+
+        // ➕ Addition
+        QuantityWeight w3 = new QuantityWeight(2.0, WeightUnit.POUND);
+
+        System.out.println(w1.add(w3, WeightUnit.KILOGRAM));
     }
 }
