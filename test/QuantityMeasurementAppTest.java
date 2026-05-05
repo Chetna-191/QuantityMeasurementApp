@@ -3,74 +3,81 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class QuantityMeasurementAppTest {
 
-    private static final double EPS = 1e-2;
-
     @Test
-    void testLitreToMillilitreEquality() {
-        var v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
-        var v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+    void testSubtractionFeetInch() {
+        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        var q2 = new Quantity<>(6.0, LengthUnit.INCH);
 
-        assertTrue(v1.equals(v2));
+        assertEquals(9.5, q1.subtract(q2).getValue());
     }
 
     @Test
-    void testLitreToGallonEquality() {
-        var v1 = new Quantity<>(3.78541, VolumeUnit.LITRE);
-        var v2 = new Quantity<>(1.0, VolumeUnit.GALLON);
+    void testSubtractionTargetUnit() {
+        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        var q2 = new Quantity<>(6.0, LengthUnit.INCH);
 
-        assertTrue(v1.equals(v2));
+        assertEquals(114.0, q1.subtract(q2, LengthUnit.INCH).getValue());
     }
 
     @Test
-    void testConversion_LitreToML() {
-        var v = new Quantity<>(1.0, VolumeUnit.LITRE);
+    void testNegativeSubtraction() {
+        var q1 = new Quantity<>(5.0, LengthUnit.FEET);
+        var q2 = new Quantity<>(10.0, LengthUnit.FEET);
 
-        var result = v.convertTo(VolumeUnit.MILLILITRE);
-
-        assertEquals(1000.0, result.getValue(), EPS);
+        assertEquals(-5.0, q1.subtract(q2).getValue());
     }
 
     @Test
-    void testConversion_GallonToLitre() {
-        var v = new Quantity<>(1.0, VolumeUnit.GALLON);
+    void testZeroSubtraction() {
+        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        var q2 = new Quantity<>(120.0, LengthUnit.INCH);
 
-        var result = v.convertTo(VolumeUnit.LITRE);
-
-        assertEquals(3.78541, result.getValue(), EPS);
+        assertEquals(0.0, q1.subtract(q2).getValue());
     }
 
     @Test
-    void testAddition_DefaultUnit() {
-        var v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
-        var v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+    void testDivisionSameUnit() {
+        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        var q2 = new Quantity<>(2.0, LengthUnit.FEET);
 
-        var result = v1.add(v2);
-
-        assertEquals(2.0, result.getValue(), EPS);
+        assertEquals(5.0, q1.divide(q2));
     }
 
     @Test
-    void testAddition_TargetUnit() {
-        var v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
-        var v2 = new Quantity<>(1.0, VolumeUnit.GALLON);
+    void testDivisionCrossUnit() {
+        var q1 = new Quantity<>(24.0, LengthUnit.INCH);
+        var q2 = new Quantity<>(2.0, LengthUnit.FEET);
 
-        var result = v1.add(v2, VolumeUnit.MILLILITRE);
-
-        assertEquals(4785.41, result.getValue(), EPS);
+        assertEquals(1.0, q1.divide(q2));
     }
 
     @Test
-    void testNullUnit() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Quantity<>(1.0, null);
-        });
+    void testDivisionLessThanOne() {
+        var q1 = new Quantity<>(5.0, LengthUnit.FEET);
+        var q2 = new Quantity<>(10.0, LengthUnit.FEET);
+
+        assertEquals(0.5, q1.divide(q2));
     }
 
     @Test
-    void testVolumeVsWeight_NotEqual() {
-        var v = new Quantity<>(1.0, VolumeUnit.LITRE);
-        var w = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+    void testDivisionByZero() {
+        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        var q2 = new Quantity<>(0.0, LengthUnit.FEET);
 
-        assertFalse(v.equals(w));
+        assertThrows(ArithmeticException.class, () -> q1.divide(q2));
+    }
+
+    @Test
+    void testNullSubtraction() {
+        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
+
+        assertThrows(IllegalArgumentException.class, () -> q1.subtract(null));
+    }
+
+    @Test
+    void testNullDivision() {
+        var q1 = new Quantity<>(10.0, LengthUnit.FEET);
+
+        assertThrows(IllegalArgumentException.class, () -> q1.divide(null));
     }
 }

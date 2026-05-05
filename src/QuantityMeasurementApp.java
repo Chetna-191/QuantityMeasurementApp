@@ -1,30 +1,19 @@
-public class Main {
+public static void main(String[] args) {
 
-    public static void main(String[] args) {
+    // LENGTH
+    Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+    Quantity<LengthUnit> q2 = new Quantity<>(6.0, LengthUnit.INCH);
 
-        // 🔹 LENGTH
-        Quantity<LengthUnit> l1 = new Quantity<>(1.0, LengthUnit.FOOT);
-        Quantity<LengthUnit> l2 = new Quantity<>(12.0, LengthUnit.INCH);
+    System.out.println(q1.subtract(q2)); // 9.5 FEET
+    System.out.println(q1.subtract(q2, LengthUnit.INCH)); // 114 INCH
 
-        System.out.println("Length Equal: " + l1.equals(l2));
+    // VOLUME
+    Quantity<VolumeUnit> v1 = new Quantity<>(5.0, VolumeUnit.LITRE);
+    Quantity<VolumeUnit> v2 = new Quantity<>(500.0, VolumeUnit.MILLILITRE);
 
-        // 🔹 WEIGHT
-        Quantity<WeightUnit> w1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
-        Quantity<WeightUnit> w2 = new Quantity<>(1000.0, WeightUnit.GRAM);
+    System.out.println(v1.subtract(v2)); // 4.5 LITRE
 
-        System.out.println("Weight Equal: " + w1.equals(w2));
-
-        // 🔹 VOLUME
-        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
-        Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
-
-        System.out.println("Volume Equal: " + v1.equals(v2));
-
-        // 🔹 Conversion
-        System.out.println(v1.convertTo(VolumeUnit.GALLON));
-
-        // 🔹 Addition
-        System.out.println(v1.add(v2));
-        System.out.println(v1.add(v2, VolumeUnit.MILLILITRE));
-    }
+    // DIVISION
+    System.out.println(q1.divide(new Quantity<>(2.0, LengthUnit.FEET))); // 5.0
+    System.out.println(v1.divide(new Quantity<>(10.0, VolumeUnit.LITRE))); // 0.5
 }

@@ -82,3 +82,56 @@ public class Quantity<U extends IMeasurable> {
         return String.format("Quantity(%.5f, %s)", value, unit.getUnitName());
     }
 }
+public Quantity<U> subtract(Quantity<U> other) {
+
+    if (other == null)
+        throw new IllegalArgumentException("Other cannot be null");
+
+    if (!this.unit.getClass().equals(other.unit.getClass()))
+        throw new IllegalArgumentException("Different measurement categories");
+
+    double base1 = unit.convertToBaseUnit(value);
+    double base2 = other.unit.convertToBaseUnit(other.value);
+
+    double resultBase = base1 - base2;
+
+    double finalValue = unit.convertFromBaseUnit(resultBase);
+
+    return new Quantity<>(round(finalValue), unit);
+}
+public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
+
+    if (other == null || targetUnit == null)
+        throw new IllegalArgumentException("Invalid input");
+
+    if (!this.unit.getClass().equals(other.unit.getClass()))
+        throw new IllegalArgumentException("Different categories");
+
+    double base1 = unit.convertToBaseUnit(value);
+    double base2 = other.unit.convertToBaseUnit(other.value);
+
+    double resultBase = base1 - base2;
+
+    double finalValue = targetUnit.convertFromBaseUnit(resultBase);
+
+    return new Quantity<>(round(finalValue), targetUnit);
+}
+public double divide(Quantity<U> other) {
+
+    if (other == null)
+        throw new IllegalArgumentException("Other cannot be null");
+
+    if (!this.unit.getClass().equals(other.unit.getClass()))
+        throw new IllegalArgumentException("Different categories");
+
+    double base1 = unit.convertToBaseUnit(value);
+    double base2 = other.unit.convertToBaseUnit(other.value);
+
+    if (base2 == 0)
+        throw new ArithmeticException("Division by zero");
+
+    return base1 / base2;
+}
+private double round(double value) {
+    return Math.round(value * 100.0) / 100.0;
+}
