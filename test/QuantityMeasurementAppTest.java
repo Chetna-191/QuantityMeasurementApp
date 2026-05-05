@@ -3,59 +3,74 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class QuantityMeasurementAppTest {
 
+    private static final double EPS = 1e-2;
+
     @Test
-    void testFeetToInch() {
-        var q = new QuantityMeasurementApp.Quantity(1.0, LengthUnit.FEET);
-        assertEquals(12.0, q.convertTo(LengthUnit.INCH).value);
+    void testLitreToMillilitreEquality() {
+        var v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+
+        assertTrue(v1.equals(v2));
     }
 
     @Test
-    void testInchToFeet() {
-        var q = new QuantityMeasurementApp.Quantity(12.0, LengthUnit.INCH);
-        assertEquals(1.0, q.convertTo(LengthUnit.FEET).value);
+    void testLitreToGallonEquality() {
+        var v1 = new Quantity<>(3.78541, VolumeUnit.LITRE);
+        var v2 = new Quantity<>(1.0, VolumeUnit.GALLON);
+
+        assertTrue(v1.equals(v2));
     }
 
     @Test
-    void testYardToFeet() {
-        var q = new QuantityMeasurementApp.Quantity(1.0, LengthUnit.YARD);
-        assertEquals(3.0, q.convertTo(LengthUnit.FEET).value);
+    void testConversion_LitreToML() {
+        var v = new Quantity<>(1.0, VolumeUnit.LITRE);
+
+        var result = v.convertTo(VolumeUnit.MILLILITRE);
+
+        assertEquals(1000.0, result.getValue(), EPS);
     }
 
     @Test
-    void testCmToFeet() {
-        var q = new QuantityMeasurementApp.Quantity(30.48, LengthUnit.CM);
-        double result = q.convertTo(LengthUnit.FEET).value;
-        assertTrue(Math.abs(result - 1.0) < 0.01);
+    void testConversion_GallonToLitre() {
+        var v = new Quantity<>(1.0, VolumeUnit.GALLON);
+
+        var result = v.convertTo(VolumeUnit.LITRE);
+
+        assertEquals(3.78541, result.getValue(), EPS);
     }
 
     @Test
-    void testEquality() {
-        var q1 = new QuantityMeasurementApp.Quantity(1.0, LengthUnit.FEET);
-        var q2 = new QuantityMeasurementApp.Quantity(12.0, LengthUnit.INCH);
+    void testAddition_DefaultUnit() {
+        var v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
 
-        assertTrue(q1.equals(q2));
+        var result = v1.add(v2);
+
+        assertEquals(2.0, result.getValue(), EPS);
     }
 
     @Test
-    void testAdditionFeet() {
-        var q1 = new QuantityMeasurementApp.Quantity(1.0, LengthUnit.FEET);
-        var q2 = new QuantityMeasurementApp.Quantity(12.0, LengthUnit.INCH);
+    void testAddition_TargetUnit() {
+        var v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var v2 = new Quantity<>(1.0, VolumeUnit.GALLON);
 
-        assertEquals(2.0, q1.add(q2, LengthUnit.FEET).value);
-    }
+        var result = v1.add(v2, VolumeUnit.MILLILITRE);
 
-    @Test
-    void testAdditionYard() {
-        var q1 = new QuantityMeasurementApp.Quantity(1.0, LengthUnit.FEET);
-        var q2 = new QuantityMeasurementApp.Quantity(12.0, LengthUnit.INCH);
-
-        double result = q1.add(q2, LengthUnit.YARD).value;
-        assertTrue(Math.abs(result - 0.6667) < 0.01);
+        assertEquals(4785.41, result.getValue(), EPS);
     }
 
     @Test
     void testNullUnit() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new QuantityMeasurementApp.Quantity(1.0, null));
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Quantity<>(1.0, null);
+        });
+    }
+
+    @Test
+    void testVolumeVsWeight_NotEqual() {
+        var v = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var w = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+
+        assertFalse(v.equals(w));
     }
 }
